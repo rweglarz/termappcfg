@@ -30,6 +30,6 @@ bindkey '^[[A' up-line-or-beginning-search
 bindkey '^[[B' down-line-or-beginning-search
 
 
-source <(kubectl completion zsh)
+command -v kubectl &> /dev/null && source <(kubectl completion zsh)
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
