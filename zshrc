@@ -35,3 +35,4 @@ command -v kubectl &> /dev/null && source <(kubectl completion zsh)
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 WORDCHARS='*?-_[]~=/&;!#$%^(){}<>'
+PATH=$PATH:~/bin
