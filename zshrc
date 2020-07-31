@@ -36,3 +36,6 @@ command -v kubectl &> /dev/null && source <(kubectl completion zsh)
 
 WORDCHARS='*?-_[]~=/&;!#$%^(){}<>'
 PATH=$PATH:~/bin
+HISTFILE=~/.zsh_history
+HISTSIZE=2000
+SAVEHIST=5000
