@@ -34,8 +34,14 @@ command -v kubectl &> /dev/null && source <(kubectl completion zsh)
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+alias k='kubectl'
+alias kks='kubectl -n kube-system'
+alias kpv='kubectl get pv -o custom-columns=name:.metadata.name,status:.status.phase,claim.name:.spec.claimRef.name,claim.uid:.spec.claimRef.uid'
+alias kpvc='kubectl get pvc --all-namespaces -o custom-columns=ns:.metadata.namespace,name:.metadata.name,uid:.metadata.uid,volume:.spec.volumeName,capacity:.spec.resources.requests.storage,class:.spec.storageClassName'
+
 WORDCHARS='*?-_[]~&;!#$%^(){}<>'
 export PATH=$PATH:~/bin
 HISTFILE=~/.zsh_history
 HISTSIZE=2000
 SAVEHIST=5000
+export KUBE_EDITOR=vim
