@@ -2,13 +2,10 @@
 	st = status --short --untracked-files=no
 	la = diff --cached --name-only
 	ls = ls-files --modified
-	da = diff --cached
+	ds = diff --staged
 	shown = show --name-status
 	lg = log --name-status --decorate
 	lf = log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s"
-	lfb = log --graph --full-history --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s" --no-merges --first-parent
-	lr = log -C --summary --decorate
-	ld = log --oneline --decorate
 	plg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	out = log @{u}.. --decorate
 	outall = log --branches --not --remotes --decorate
