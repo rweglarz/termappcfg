@@ -1,0 +1,10 @@
+#!/bin/bash
+
+for pod in $(kubectl -n kube-system get pods -o name); do
+	if [[ $pod == pod/pan*mgmt* ]]; then
+		echo $pod
+		kubectl -n kube-system exec -it $pod -- ipsec status
+		kubectl -n kube-system exec -it $pod -- sdb chassis.*.info
+		echo
+	fi
+done

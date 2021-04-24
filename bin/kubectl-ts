@@ -1,0 +1,44 @@
+#!/bin/bash 
+
+echo Triggering TS gen
+for tpod in $(kubectl -n kube-system get pods -o name); do
+        [[ ! $tpod == pod/pan*mgmt* ]] && continue
+	echo $tpod
+	pod=${tpod/pod\//}
+	echo "request tech-support dump" | kubectl -n kube-system exec -i $tpod -- su - admin &>/dev/null
+done
+
+echo Waiting for completion
+for tpod in $(kubectl -n kube-system get pods -o name); do
+        [[ ! $tpod == pod/pan*mgmt* ]] && continue
+	echo $tpod
+	pod=${tpod/pod\//}
+	while true; do
+		#2021/02/22 11:36:07   11:36:07            2                                           Exec                            ACT   PEND        40%
+		#2021/02/22 11:36:07   11:36:07            2                                           Exec                            FIN     OK 11:42:55  
+		echo "show jobs all" | kubectl -n kube-system exec -i $tpod -- su - admin | egrep 'Exec.*ACT' &>/dev/null
+		[ $? != 0 ] && break
+		echo -n .
+		sleep 60
+	done
+done
+
+echo Copying
+for tpod in $(kubectl -n kube-system get pods -o name); do
+        [[ ! $tpod == pod/pan*mgmt* ]] && continue
+	echo $tpod
+	pod=${tpod/pod\//}
+	ts=$(kubectl -n kube-system exec $pod -- ls /opt/pancfg/tmp/techsupport)
+	if [ -z "$ts" ]; then
+		echo did not find ts file on $pod
+		continue
+	fi
+	echo $pod $ts
+	kubectl -n kube-system cp $pod:/opt/pancfg/tmp/techsupport/$ts  ~/Downloads/$ts
+	echo
+done
+
+notme TS file done
+
+
+

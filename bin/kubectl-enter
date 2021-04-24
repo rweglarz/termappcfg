@@ -1,0 +1,22 @@
+#!/bin/bash
+
+tpod=$1
+
+if [[ $1 == pan*ngfw* ]]; then
+	echo $tpod
+	kubectl exec -n kube-system -it $1 -- sh
+	exit
+fi
+if [[ $1 == pan*mgmt* ]]; then
+	echo $tpod
+	kubectl exec -n kube-system -it $1 -- bash
+	exit
+fi
+
+while read namespace pod rest; do
+	[[ $pod == $tpod ]] && break
+done < <(kubectl get pods --all-namespaces)
+
+[[ $pod != $tpod ]] && echo "pod not found" && exit 1
+echo $namespace  $tpod
+kubectl exec -n $namespace -it $tpod -- bash

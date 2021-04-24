@@ -1,0 +1,21 @@
+#!/bin/bash
+
+oldver=$(kubectl get clusterversion | grep ^v | awk '{print $2;}')
+newver=$(kubectl get clusterversion | grep ^v | sed -E 's/.*(Working towards|Unable to apply) (.*): .*/\2/')
+while true; do 
+	clear
+	echo $(date)   $oldver '=>' $newver
+	kubectl get clusterversion
+	kubectl get clusteroperators | awk "(\$1==\"NAME\") || ((\$4==\"False\") && (\$5==\"False\") && (\$2~/$newver/))"
+	kubectl get nodes
+	kubectl get mcp
+	echo
+	echo progressing or degraded
+	kubectl get clusteroperators | awk "(\$1==\"NAME\") || (\$4=="True") || (\$5==\"True\")"
+	echo
+	echo old
+	kubectl get clusteroperators | awk "(\$1==\"NAME\") || (\$2~/$oldver/)"
+	echo pods
+	kubectl get pods -A | egrep -v 'Running|Completed'
+	sleep 180
+done

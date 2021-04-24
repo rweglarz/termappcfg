@@ -1,0 +1,7 @@
+#!/bin/bash
+if [[ $(uname -s ) == "Linux" ]]; then
+	notify-send "$*"
+else
+	terminal-notifier -sound Glass -title "status changed" -message "$*"
+	#osascript -e 'say "Command finished!"'
+fi

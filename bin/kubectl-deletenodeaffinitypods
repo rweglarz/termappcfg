@@ -1,0 +1,8 @@
+#!/bin/bash
+
+tpod=$1
+
+while read namespace pod ready status rest; do
+	[[ $status != "NodeAffinity" ]] && continue
+	kubectl -n $namespace delete pod $pod
+done < <(kubectl get pods --all-namespaces)

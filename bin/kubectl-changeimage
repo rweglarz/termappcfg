@@ -1,0 +1,61 @@
+#!/bin/bash
+
+source ~/almostsecret
+
+tver=$1
+target=$2
+upgrademask=3
+
+if [ -z "$tver" ]; then
+	gcloud container images list-tags ${cnregistry}/panos_cn_mgmt
+	echo
+	gcloud container images list-tags ${cnregistry}/pan_cni
+	echo
+fi
+if [[ $tver == 10.* ]] || [[ $tver == 11.* ]]; then
+	upgrademask=2
+fi
+if [[ $tver == 1.0.* ]] || [[ $tver == 2.0.* ]]; then
+	upgrademask=1
+fi
+
+[ $(( $upgrademask & 2 )) -eq 2 ] && for d in $(kubectl -n kube-system get statefulset -o name); do
+	[[ $d != */pan*mgmt* ]] && continue
+	if [ $upgrademask -ne 2 ] ; then
+		kubectl -n kube-system get $d -o wide
+		echo
+		continue
+	fi
+	[ ! -z "$target" ] && [[ $d != $target ]] && continue
+	kubectl -n kube-system set image $d pan-mgmt=${cnregistry}/panos_cn_mgmt:$tver --record
+done
+[ $(( $upgrademask & 2 ))  -eq 2 ] && for d in $(kubectl -n kube-system get daemonset -o name); do
+	[[ $d != */pan*ngfw* ]] && continue
+	if [ $upgrademask -ne 2 ] ; then
+		kubectl -n kube-system get $d -o wide
+		echo
+		continue
+	fi
+	[ ! -z "$target" ] && [[ $d != $target ]] && continue
+	kubectl -n kube-system set image $d pan-ngfw-container=${cnregistry}/panos_cn_ngfw:$tver --record
+done
+[ $(( $upgrademask & 2 ))  -eq 2 ] && for d in $(kubectl -n kube-system get deployment -o name); do
+	[[ $d != */pan*ngfw* ]] && continue
+	if [ $upgrademask -ne 2 ] ; then
+		kubectl -n kube-system get $d -o wide
+		echo
+		continue
+	fi
+	[ ! -z "$target" ] && [[ $d != $target ]] && continue
+	kubectl -n kube-system set image $d pan-ngfw-container=${cnregistry}/panos_cn_ngfw:$tver --record
+done
+[ $(( $upgrademask & 1 ))  -eq 1 ] && for d in $(kubectl -n kube-system get daemonset -o name); do
+	[[ $d != */pan*cni* ]] && continue
+	if [ $upgrademask -ne 1 ] ; then
+		kubectl -n kube-system get $d -o wide
+		echo
+		continue
+	fi
+	[ ! -z "$target" ] && [[ $d != $target ]] && continue
+	kubectl -n kube-system set image daemonset/pan-cni install-pan-cni=${cnregistry}/pan_cni:$tver --record
+done
