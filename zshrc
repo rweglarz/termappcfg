@@ -36,8 +36,14 @@ command -v kubectl &> /dev/null && source <(kubectl completion zsh)
 
 alias k='kubectl'
 alias kks='kubectl -n kube-system'
-alias kpv='kubectl get pv -o custom-columns=name:.metadata.name,status:.status.phase,claim.name:.spec.claimRef.name,claim.uid:.spec.claimRef.uid'
-alias kpvc='kubectl get pvc --all-namespaces -o custom-columns=ns:.metadata.namespace,name:.metadata.name,uid:.metadata.uid,volume:.spec.volumeName,capacity:.spec.resources.requests.storage,class:.spec.storageClassName'
+alias kksgp='kubectl -n kube-system get pods -o wide'
+alias kksgpp='kubectl -n kube-system get pods -o wide -l "app in (pan-mgmt,pan-ngfw)"; kubectl -n kube-system get pods -o wide -l "k8s-app in (pan-cni)"'
+alias kksev='kubectl -n kube-system get events  --sort-by="{.lastTimestamp}"'
+alias kp='kubectl -n prod1'
+alias kpgp='kubectl -n prod1 get pods -o wide'
+alias kgn='kubectl get nodes -o wide'
+alias kgpv='kubectl get pv -o custom-columns=name:.metadata.name,status:.status.phase,claim.name:.spec.claimRef.name,claim.uid:.spec.claimRef.uid'
+alias kgpvc='kubectl get pvc --all-namespaces -o custom-columns=ns:.metadata.namespace,name:.metadata.name,uid:.metadata.uid,volume:.spec.volumeName,capacity:.spec.resources.requests.storage,class:.spec.storageClassName'
 
 WORDCHARS='*?-_[]~&;!#$%^(){}<>'
 export PATH=$PATH:~/bin
@@ -45,3 +51,4 @@ HISTFILE=~/.zsh_history
 HISTSIZE=2000
 SAVEHIST=5000
 export KUBE_EDITOR=vim
+
