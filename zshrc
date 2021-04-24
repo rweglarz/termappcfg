@@ -22,6 +22,7 @@ zstyle ':completion:*' show-ambiguity $color[bg-red]
 
 setopt nomenucomplete
 setopt noautomenu
+setopt +o nomatch
 
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
