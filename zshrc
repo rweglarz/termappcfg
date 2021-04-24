@@ -7,6 +7,7 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 source ~/powerlevel10k/powerlevel10k.zsh-theme
+source ~/almostsecret
 
 autoload -U colors
 colors
@@ -31,8 +32,9 @@ bindkey '^[[B' down-line-or-beginning-search
 
 
 command -v kubectl &> /dev/null && source <(kubectl completion zsh)
+[[ -f ~/bin/google-cloud-sdk/completion.zsh.inc ]] && source ~/bin/google-cloud-sdk/completion.zsh.inc
 
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 alias k='kubectl'
 alias kks='kubectl -n kube-system'
@@ -46,7 +48,7 @@ alias kgpv='kubectl get pv -o custom-columns=name:.metadata.name,status:.status.
 alias kgpvc='kubectl get pvc --all-namespaces -o custom-columns=ns:.metadata.namespace,name:.metadata.name,uid:.metadata.uid,volume:.spec.volumeName,capacity:.spec.resources.requests.storage,class:.spec.storageClassName'
 
 WORDCHARS='*?-_[]~&;!#$%^(){}<>'
-export PATH=$PATH:~/bin
+export PATH=$PATH:~/bin:~/bin/google-cloud-sdk/bin/
 HISTFILE=~/.zsh_history
 HISTSIZE=2000
 SAVEHIST=5000
