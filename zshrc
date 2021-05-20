@@ -47,6 +47,8 @@ alias kpgp='kubectl -n prod1 get pods -o wide'
 alias kgn='kubectl get nodes -o wide'
 alias kgpv='kubectl get pv -o custom-columns=name:.metadata.name,status:.status.phase,claim.name:.spec.claimRef.name,claim.uid:.spec.claimRef.uid'
 alias kgpvc='kubectl get pvc --all-namespaces -o custom-columns=ns:.metadata.namespace,name:.metadata.name,uid:.metadata.uid,volume:.spec.volumeName,capacity:.spec.resources.requests.storage,class:.spec.storageClassName'
+alias kgs='kubectl -n kube-system get panslotconfigs pan-mgmt-svc-slots -o json | gsed "s/{/\n{/g" | egrep config_done'
+alias kcm='kubectl -n custom-metrics'
 
 WORDCHARS='*?-_[]~&;!#$%^(){}<>'
 export PATH=$PATH:~/bin:~/bin/google-cloud-sdk/bin/
