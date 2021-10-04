@@ -19,6 +19,7 @@ compinit
 #zstyle ':completion:*' show-ambiguity 'true'
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' show-ambiguity $color[bg-red]
+zstyle ':completion:*:ssh:*' hosts
 
 setopt nomenucomplete
 setopt noautomenu
