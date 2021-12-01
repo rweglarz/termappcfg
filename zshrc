@@ -69,4 +69,5 @@ HISTFILE=~/.zsh_history
 HISTSIZE=2000
 SAVEHIST=5000
 export KUBE_EDITOR=vim
+export EDITOR=/usr/bin/vim
 
