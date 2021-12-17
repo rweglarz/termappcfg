@@ -2,12 +2,12 @@
 
 tpod=$1
 
-if [[ $1 == pan*ngfw* ]]; then
+if [[ $1 == pan*cni* ]]; then
 	echo $tpod
 	kubectl exec -n kube-system -it $1 -- sh
 	exit
 fi
-if [[ $1 == pan*mgmt* ]]; then
+if [[ $1 == pan*ngfw* ]] || [[ $1 == pan*mgmt* ]]; then
 	echo $tpod
 	kubectl exec -n kube-system -it $1 -- bash
 	exit
