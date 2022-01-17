@@ -51,6 +51,11 @@ alias kgpvc='kubectl get pvc --all-namespaces -o custom-columns=ns:.metadata.nam
 alias kgs='kubectl -n kube-system get panslotconfigs pan-mgmt-svc-slots -o json | gsed "s/{/\n{/g" | egrep config_done'
 alias kcm='kubectl -n custom-metrics'
 
+function awsinstbyip () {
+	aws ec2 describe-instances --region eu-central-1 --filter Name=private-ip-address,Values=$1 | \
+		jq '.Reservations[0].Instances[0] | {"id":.InstanceId, "ni": .NetworkInterfaces | [.[] | {"di":.Attachment.DeviceIndex,"ip":.PrivateIpAddress,"eni":.NetworkInterfaceId} ] | sort_by(.di)}'
+}
+
 WORDCHARS='*?-_[]~&;!#$%^(){}<>'
 export PATH=$PATH:~/bin:~/bin/google-cloud-sdk/bin/
 HISTFILE=~/.zsh_history
