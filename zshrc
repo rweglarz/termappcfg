@@ -39,22 +39,29 @@ command -v kubectl &> /dev/null && source <(kubectl completion zsh)
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 alias k='kubectl'
+alias kc='kubectl -n client'
+alias kcgp='kubectl -n client get pods -o wide'
 alias kks='kubectl -n kube-system'
 alias kksgp='kubectl -n kube-system get pods -o wide'
 alias kksgpp='kubectl -n kube-system get pods -o wide -l "app in (pan-mgmt,pan-ngfw)"; kubectl -n kube-system get pods -o wide -l "k8s-app in (pan-cni)"'
 alias kksev='kubectl -n kube-system get events  --sort-by="{.lastTimestamp}"'
-alias kp='kubectl -n prod1'
-alias kpgp='kubectl -n prod1 get pods -o wide'
+alias kp1='kubectl -n prod1'
+alias kp1gp='kubectl -n prod1 get pods -o wide'
+alias kp2='kubectl -n prod2'
+alias kp2gp='kubectl -n prod2 get pods -o wide'
 alias kgn='kubectl get nodes -o wide'
 alias kgpv='kubectl get pv -o custom-columns=name:.metadata.name,status:.status.phase,claim.name:.spec.claimRef.name,claim.uid:.spec.claimRef.uid,handle:.spec.csi.volumeHandle'
 alias kgpvc='kubectl get pvc --all-namespaces -o custom-columns=ns:.metadata.namespace,name:.metadata.name,uid:.metadata.uid,volume:.spec.volumeName,capacity:.spec.resources.requests.storage,class:.spec.storageClassName'
 alias kgs='kubectl -n kube-system get panslotconfigs pan-mgmt-svc-slots -o json | gsed "s/{/\n{/g" | egrep config_done'
 alias kcm='kubectl -n custom-metrics'
+alias tpp='terraform plan -out p1'
+alias tpd='terraform plan -destroy -out p1'
+alias tpa='terraform apply p1'
+alias tpo='terraform output'
+alias pca='~/bin/panorama.py commit-all'
+alias awsscg='f() { aws autoscaling set-desired-capacity --region eu-central-1 --auto-scaling-group-name $1 --desired-capacity $2 };f'
+alias timestamp='gawk "{ print strftime(\"[%Y-%m-%d %H:%M:%S]\"), \$0 }"'
 
-function awsinstbyip () {
-	aws ec2 describe-instances --region eu-central-1 --filter Name=private-ip-address,Values=$1 | \
-		jq '.Reservations[0].Instances[0] | {"id":.InstanceId, "ni": .NetworkInterfaces | [.[] | {"di":.Attachment.DeviceIndex,"ip":.PrivateIpAddress,"eni":.NetworkInterfaceId} ] | sort_by(.di)}'
-}
 
 WORDCHARS='*?-_[]~&;!#$%^(){}<>'
 export PATH=$PATH:~/bin:~/bin/google-cloud-sdk/bin/
