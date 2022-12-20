@@ -19,6 +19,14 @@
 [[ ! -o 'no_brace_expand' ]] || p10k_config_opts+=('no_brace_expand')
 'builtin' 'setopt' 'no_aliases' 'no_sh_glob' 'brace_expand'
 
+prompt_rctime() {
+  emulate -L zsh
+  (( P9K_COMMAND_DURATION_SECONDS >= _POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD )) || return
+  local rctime=${${(%)_POWERLEVEL9K_TIME_FORMAT}//\%/%%}
+  p10k segment -f 208 -i '↥' -t $rctime
+}
+
+
 () {
   emulate -L zsh -o extended_glob
 
@@ -31,6 +39,8 @@
 
   # The list of segments shown on the left. Fill it with the most important segments.
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+    newline
+    newline
     context                 # user@hostname
     dir                     # current directory
     vcs                     # git status
@@ -44,6 +54,9 @@
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
     status                  # exit code of the last command
     command_execution_time  # duration of the last command
+    rctime
+    newline
+    newline
     time
     background_jobs         # presence of background jobs
     #direnv                  # direnv status (https://direnv.net/)
@@ -113,11 +126,13 @@
   typeset -g POWERLEVEL9K_TRANSIENT_PROMPT=off
 
   function p10k-on-pre-prompt()  {
-    p10k display '1/left/*'=show '1/left/prompt_char'=hide '1/right/*'=hide '1/right/(command_execution_time|status)'=show
+    p10k display '3/left/*'=show '3/left/prompt_char'=hide
+    p10k display '3/right/*'=hide '1/right/(command_execution_time|status)'=show '1/right/rctime'=show
   }
 
   function p10k-on-post-prompt() {
-    p10k display '1/left/*'=hide '1/left/prompt_char'=show '1/right/*'=hide '1/right/(command_execution_time|status|time)'=show
+    p10k display '3/left/*'=hide '3/left/prompt_char'=show
+    p10k display '3/right/*'=hide '3/right/time'=show
   }
 
 
@@ -141,17 +156,17 @@
   typeset -g POWERLEVEL9K_ICON_BEFORE_CONTENT=
 
   # Add an empty line before each prompt.
-  typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+  typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=false
 
   # Connect left prompt lines with these symbols. You'll probably want to use the same color
   # as POWERLEVEL9K_MULTILINE_FIRST_PROMPT_GAP_FOREGROUND below.
-  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX='%244F╭─'
-  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX='%244F├─'
-  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX='%244F╰─'
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=''
+  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX=''
+  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=''
   # Connect right prompt lines with these symbols.
-  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_SUFFIX='%244F─╮'
-  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_SUFFIX='%244F─┤'
-  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_SUFFIX='%244F─╯'
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_SUFFIX=''
+  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_SUFFIX=''
+  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_SUFFIX=''
 
   # Filler between left and right prompt on the first prompt line. You can set it to ' ', '·' or
   # '─'. The last two make it easier to see the alignment between left and right prompt and to
