@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+echo "Create"
+terraform show -no-color -json p1 | jq -r '.resource_changes[] | select(.change.actions[0]=="create") | .address' | sed 's/^/   /'
+
+echo "Update"
+terraform show -no-color -json p1 | jq -r '.resource_changes[] | select(.change.actions[0]=="update") | .address' | sed 's/^/   /'
+
+echo "Delete"
+printf "${RED}"
+terraform show -no-color -json p1 | jq -r '.resource_changes[] | select(.change.actions[0]=="delete") | .address' | sed 's/^/   /'
+printf "${NC}\n"
