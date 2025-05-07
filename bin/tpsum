@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-RED='\033[0;31m'
-NC='\033[0m' # No Color
+if ! [ "$1" == "--no-color" ]; then
+	RED='\033[0;31m'
+	NC='\033[0m' # No Color
+fi
 
 echo "Create"
 terraform show -no-color -json p1 | jq -r '.resource_changes[] | select(.change.actions[0]=="create") | .address' | sed 's/^/   /'
