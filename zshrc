@@ -86,7 +86,7 @@ alias tpgo='~/bin/tf-tgt-p-a.sh && ~/bin/panorama.py commit-all && terraform pla
 alias awsscg='f() { aws autoscaling set-desired-capacity --region eu-central-1 --auto-scaling-group-name $1 --desired-capacity $2 };f'
 alias timestamp='gawk "{ print strftime(\"[%Y-%m-%d %H:%M:%S]\"), \$0 }"'
 alias gssh='f() { h=$(shift); gcloud compute ssh $h --tunnel-through-iap --ssh-key-file ~/.ssh/id_rsa "$@" }; f'
-alias gcl='gcloud compute instances list --format="table(NAME, networkInterfaces[0].networkIP,networkInterfaces[0].accessConfigs[0].natIP:label='nic0-pub-ip',networkInterfaces[1].accessConfigs[0].natIP:label='nic1-pub-ip',tags.items.list():label=TAGS,status)"'
+alias gcl='gcloud compute instances list --format="table(NAME, networkInterfaces[0].networkIP:label='nic0-ip',networkInterfaces[1].networkIP:label='nic1-ip',networkInterfaces[0].accessConfigs[0].natIP:label='nic0-pub-ip',networkInterfaces[1].accessConfigs[0].natIP:label='nic1-pub-ip',tags.items.list():label=TAGS,status)"'
 
 WORDCHARS='*?-_[]~&;!#$%^(){}<>'
 export PATH=$PATH:~/bin:~/bin/google-cloud-sdk/bin/:/usr/local/bin/:/opt/homebrew/bin/:~/Library/Python/3.9/bin/
